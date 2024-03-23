@@ -57,10 +57,12 @@ def insert_db(session, conn):
                            (session.app_id, session.code, session.start_time, session.end_time, session.created_at))
         else:
             cursor.execute('''UPDATE sessions
-                              SET end_time = ?
-                              WHERE app_id = ? AND end_time IS NULL
-                              ORDER BY start_time DESC
-                              LIMIT 1''',
+                      SET end_time = ?
+                      WHERE id = (SELECT id
+                                  FROM sessions
+                                  WHERE app_id = ? AND end_time IS NULL
+                                  ORDER BY start_time DESC
+                                  LIMIT 1)''',
                            (session[1], session[0]))
         conn.commit()
 
