@@ -2,6 +2,7 @@ from config import STEAM_PATH, DB_NAME
 import re
 import sqlite3
 from datetime import datetime
+from time import time
 
 steam_log = STEAM_PATH + "/logs/compat_log.txt"
 
@@ -73,6 +74,7 @@ def insert_db(session, conn):
 
 # Main function to parse log file and insert session objects into database
 def main():
+    t = time()
     print("Connecting to database...")
     with sqlite3.connect(DB_NAME) as conn:
         create_db(conn)
@@ -82,7 +84,7 @@ def main():
                 session_info = parse_log(line)
                 if session_info:
                     insert_db(session_info, conn)
-    print("Scan Complete! Database Updated!")
+    print(f"Scan Complete! Database Updated! Job took {time() - t} seconds.")
 
 if __name__ == "__main__":
     main()
