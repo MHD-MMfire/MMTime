@@ -1,5 +1,6 @@
 from config import DB_NAME, TIMEZONE
 from session import Session
+import scanner
 from flask import Flask, render_template
 import sqlite3
 from datetime import datetime, timedelta
@@ -11,9 +12,14 @@ tz = timezone(TIMEZONE)
 
 @app.route('/')
 def dashboard():
+    # TODO: show today and yesterday sessions in chart
     # Render the dashboard template with the retrieved sessions
     return render_template('dashboard.html', data=relative_date_sessions())
 
+@app.route('/scan')
+def scan():
+    scanner.main()
+    return render_template('scan.html')
 
 def relative_date_sessions(days_before=0, include_exceeded_prev_day=True):
     # Get the date in the timezone

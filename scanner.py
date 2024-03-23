@@ -5,8 +5,6 @@ import sqlite3
 from datetime import datetime
 from time import time
 
-steam_log = STEAM_PATH + "/logs/compat_log.txt"
-
 # Function to parse log lines and extract session information
 def parse_log(log_line):
     start_session_pattern = r'\[(.*?)\] StartSession: appID (\d+) session (\w+)'
@@ -66,6 +64,7 @@ def insert_db(session, conn):
 
 # Main function to parse log file and insert session objects into database
 def main():
+    steam_log = STEAM_PATH + "/logs/compat_log.txt"
     t = time()
     print("Connecting to database...")
     with sqlite3.connect(DB_NAME) as conn:

@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<html lang="fa">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MMTime</title>
-</head>
-<body>
-    <h1>My Dashboard</h1>
-    <ul>
-        {% for row in data %}
-        <li>{{ row }}</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends 'layout.html' %}
+
+{% block title %}Dashboard - MMTime{% endblock %}
+
+{% block header %}
+{{ super() }}
+<h2>Dashboard</h2>
+{% endblock %}
+
+{% block content %}
+    <p>This is the dashboard content.</p>
+    <a href="/scan">Scan Right Now</a>
+{% endblock %}
