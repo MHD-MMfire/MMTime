@@ -33,19 +33,22 @@ def parse_log(log_line):
     else:
         return None
 
+# Function to create database table if it doesn't exist already
+def create_db(conn):
+    with conn.cursor() as cursor:
+        cursor.execute('''CREATE TABLE IF NOT EXISTS sessions (
+                              id INTEGER PRIMARY KEY,
+                              app_id INTEGER NOT NULL,
+                              code TEXT UNIQUE NOT NULL,
+                              start_time TIMESTAMP NOT NULL,
+                              end_time TIMESTAMP,
+                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                              )''')
+        conn.commit()
+
 # Function to insert session object into SQLite database
 def insert_db(session, conn):
     cursor = conn.cursor()
-
-    cursor.execute('''CREATE TABLE IF NOT EXISTS sessions (
-                      id INTEGER PRIMARY KEY,
-                      app_id INTEGER NOT NULL,
-                      code TEXT UNIQUE NOT NULL,
-                      start_time TIMESTAMP NOT NULL,
-                      end_time TIMESTAMP,
-                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                      )''')
-
     try:
         if isinstance(session, Session):
             cursor.execute('''INSERT INTO sessions (app_id, code, start_time, end_time, created_at)
@@ -62,7 +65,6 @@ def insert_db(session, conn):
 
     except sqlite3.IntegrityError as e:
         pass
-
     finally:
         conn.close()
 
@@ -70,6 +72,7 @@ def insert_db(session, conn):
 def main():
     print("Connecting to database...")
     with sqlite3.connect(DB_NAME) as conn:
+        create_db(conn)
         print("Scanning Log File...")
         with open(steam_log, 'r') as f:
             for line in f:
