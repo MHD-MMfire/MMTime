@@ -1,19 +1,11 @@
 from config import STEAM_PATH, DB_NAME
+from session import Session
 import re
 import sqlite3
 from datetime import datetime
 from time import time
 
 steam_log = STEAM_PATH + "/logs/compat_log.txt"
-
-# Define Session class
-class Session:
-    def __init__(self, app_id, code, start_time, end_time=None, created_at=None):
-        self.app_id = app_id
-        self.code = code
-        self.start_time = start_time
-        self.end_time = end_time
-        self.created_at = created_at or datetime.now()
 
 # Function to parse log lines and extract session information
 def parse_log(log_line):
