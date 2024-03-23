@@ -10,14 +10,14 @@ class Session:
 
     # converts query fetch results to session object(s)
     @staticmethod
-    def create(fetch_result):
+    def create(fetch_result, force_array=False):
         if fetch_result:
             if isinstance(fetch_result[0], tuple):
                 # If fetch_result is a single tuple, return a single Session object
-                return Session(*fetch_result[0])
+                return [Session(*fetch_result[0])] if force_array else Session(*fetch_result[0])
             else:
                 # If fetch_result is a list of tuples, return a list of Session objects
                 return [Session(*row) for row in fetch_result]
         else:
-            return None
+            return [] if force_array else None
 
