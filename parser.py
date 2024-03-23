@@ -34,41 +34,49 @@ def parse_log(log_line):
         return None
 
 # Function to insert session object into SQLite database
-def insert_db(session):
-    conn = sqlite3.connect(DB_NAME)
+def insert_db(session, conn):
     cursor = conn.cursor()
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS sessions (
                       id INTEGER PRIMARY KEY,
-                      app_id INTEGER,
-                      code TEXT,
-                      start_time TIMESTAMP,
+                      app_id INTEGER NOT NULL,
+                      code TEXT UNIQUE NOT NULL,
+                      start_time TIMESTAMP NOT NULL,
                       end_time TIMESTAMP,
-                      created_at TIMESTAMP
+                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                       )''')
 
-    if isinstance(session, Session):
-        cursor.execute('''INSERT INTO sessions (app_id, code, start_time, end_time, created_at)
-                          VALUES (?, ?, ?, ?, ?)''',
-                       (session.app_id, session.code, session.start_time, session.end_time, session.created_at))
-    else:
-        cursor.execute('''UPDATE sessions
-                          SET end_time = ?
-                          WHERE app_id = ? AND end_time IS NULL
-                          ORDER BY start_time DESC
-                          LIMIT 1''',
-                       (session[1], session[0]))
+    try:
+        if isinstance(session, Session):
+            cursor.execute('''INSERT INTO sessions (app_id, code, start_time, end_time, created_at)
+                              VALUES (?, ?, ?, ?, ?)''',
+                           (session.app_id, session.code, session.start_time, session.end_time, session.created_at))
+        else:
+            cursor.execute('''UPDATE sessions
+                              SET end_time = ?
+                              WHERE app_id = ? AND end_time IS NULL
+                              ORDER BY start_time DESC
+                              LIMIT 1''',
+                           (session[1], session[0]))
+        conn.commit()
 
-    conn.commit()
-    conn.close()
+    except sqlite3.IntegrityError as e:
+        pass
+
+    finally:
+        conn.close()
 
 # Main function to parse log file and insert session objects into database
 def main():
-    with open(steam_log, 'r') as f:
-        for line in f:
-            session_info = parse_log(line)
-            if session_info:
-                insert_db(session_info)
+    print("Connecting to database...")
+    with sqlite3.connect(DB_NAME) as conn:
+        print("Scanning Log File...")
+        with open(steam_log, 'r') as f:
+            for line in f:
+                session_info = parse_log(line)
+                if session_info:
+                    insert_db(session_info, conn)
+    print("Scan Complete! Database Updated!")
 
 if __name__ == "__main__":
     main()
