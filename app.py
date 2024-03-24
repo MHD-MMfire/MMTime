@@ -1,7 +1,7 @@
 from config import DB_NAME
 from session import Session
 import scanner
-from flask import Flask, render_template, jsonify, request, abort
+from flask import Flask, render_template, jsonify, request
 import sqlite3
 from datetime import datetime, timedelta
 from pytz import timezone

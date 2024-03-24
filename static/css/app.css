@@ -1,0 +1,59 @@
+/* Left panel timeline styles */
+.left-panel-timeline {
+    margin-top: 20px;
+}
+
+.timeline {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px; /* Adjust line height as needed */
+    background-color: #ccc;
+}
+
+.timeline-guides {
+    position: relative;
+    height: 20px; /* Adjust height as needed */
+}
+
+.timeline-guides:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-top: 1px solid #ccc;
+}
+
+.timeline-guides div {
+    position: absolute;
+    bottom: 0;
+    font-size: 10px; /* Adjust font size as needed */
+}
+
+.timeline-events {
+    position: relative;
+    height: 50px; /* Adjust height as needed */
+}
+
+.timeline-event {
+    position: absolute;
+    background-color: red;
+    opacity: 0.8;
+    height: 50px;
+
+}
+
+.timeline-event:hover {
+    opacity: 1;
+
+}
