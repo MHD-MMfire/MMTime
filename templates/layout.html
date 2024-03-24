@@ -3,18 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}MMTime{% endblock %}</title>
+    <title>MMTime</title>
 </head>
 <body>
-    <header>
-        {% block header %}
-        <h1>MMTime</h1>
-        {% endblock %}
-    </header>
-
-    <div class="content">
-        {% block content %}
-        {% endblock %}
-    </div>
+    {% block body %}
+    {% endblock %}
 </body>
 </html>

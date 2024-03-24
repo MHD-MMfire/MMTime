@@ -1,29 +1,73 @@
-from config import DB_NAME, TIMEZONE
+from config import DB_NAME
 from session import Session
 import scanner
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request
 import sqlite3
 from datetime import datetime, timedelta
 from pytz import timezone
 
-
 app = Flask(__name__)
-tz = timezone(TIMEZONE)
 
 @app.route('/')
 def dashboard():
-    # TODO: show today and yesterday sessions in chart
+    scanner.main()
     # Render the dashboard template with the retrieved sessions
     return render_template('dashboard.html', data=relative_date_sessions())
 
 @app.route('/scan')
 def scan():
     scanner.main()
-    return render_template('scan.html')
+    return render_template('job.html', message="Database was updated. You can close this page.")
+
+@app.route('/scheduler')
+def set_scheduler():
+    # todo: create task in task scheduler
+    return render_template('job.html', message="Task successfully created in Windows Task Scheduler. You can close this page.")
+
+@app.route('/date', methods=['GET'])
+def select_date():
+    selected_date = request.args.get("date")
+    date = datetime.strptime(selected_date, "%Y-%m-%d")
+    return jsonify(date_stats(date))
+
+def date_stats(date):
+    # Get date's sessions
+    sessions_data = date_sessions(date, True)
+
+    # Calculate stats
+    date_duration = timedelta()
+    sessions_duration = timedelta()
+    apps = []
+    sessions = []
+    row = 1
+    for session in sessions_data:
+        # session
+        sessions.append(session.as_dict())
+        # date
+        date_duration += session.date_duration(date)
+        sessions_duration += session.duration(date)
+        # app
+        if session.app_id not in apps:
+            apps[session.app_id] = {"row": row,
+                                    "app_id": session.app_id,
+                                    "name": session.app_name(),
+                                    "sessions_duration": session.duration(),
+                                    "date_duration": session.date_duration(date)}
+            row += 1
+        else:
+            apps[session.app_id]["sessions_duration"] += session.duration()
+            apps[session.app_id]["date_duration"] += session.date_duration(date)
+
+    return {
+        "date_duration": date_duration,
+        "sessions_duration": sessions_duration,
+        "apps": apps,
+        "sessions": sessions,
+    }
 
 def relative_date_sessions(days_before=0, include_exceeded_prev_day=True):
     # Get the date in the timezone
-    date_tz = datetime.now(tz).date() - timedelta(days=days_before)
+    date_tz = datetime.now(timezone("Asia/Tehran")).date() - timedelta(days=days_before)
     return date_sessions(date_tz, include_exceeded_prev_day)
 
 def date_sessions(date, include_exceeded_prev_day):
