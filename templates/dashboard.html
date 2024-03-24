@@ -1,6 +1,69 @@
 {% extends 'layout.html' %}
 
+{% block head %}
+{% endblock %}
+
 {% block body %}
-    <p>This is the dashboard content.</p>
-    <a href="/scan">Scan Manually</a>
+    <h1>Dashboard</h1>
+
+    <!-- Display date selector -->
+    <label for="date-selector">Select Date:</label>
+    <input type="date" id="date-selector" onchange="getDateStats()">
+
+    <!-- Display statistics -->
+    <div id="stats-container">
+        <!-- Stats will be dynamically populated here using JavaScript -->
+    </div>
+
+    <!-- Include any JavaScript libraries or custom scripts -->
+    <script>
+        // Function to fetch date stats based on selected date
+        function getDateStats() {
+            var selectedDate = document.getElementById("date-selector").value;
+            fetch("/date?date=" + selectedDate)
+            .then(response => response.json())
+            .then(data => displayDateStats(data))
+            .catch(error => console.error('Error fetching date stats:', error));
+        }
+
+        // Function to display date statistics
+        function displayDateStats(data) {
+            // Clear previous stats
+            document.getElementById("stats-container").innerHTML = "";
+
+            // Display date duration
+            var dateDuration = document.createElement("p");
+            dateDuration.textContent = "Date Duration: " + data.date_duration;
+            document.getElementById("stats-container").appendChild(dateDuration);
+
+            // Display sessions duration
+            var sessionsDuration = document.createElement("p");
+            sessionsDuration.textContent = "Sessions Duration: " + data.sessions_duration;
+            document.getElementById("stats-container").appendChild(sessionsDuration);
+
+            // Display app-wise statistics
+            var appsList = document.createElement("ul");
+            data.apps.forEach(function(app) {
+                var appItem = document.createElement("li");
+                appItem.textContent = "App ID: " + app.app_id + ", Name: " + app.name + ", Sessions Duration: " + app.sessions_duration + ", Date Duration: " + app.date_duration;
+                appsList.appendChild(appItem);
+            });
+            document.getElementById("stats-container").appendChild(appsList);
+
+            // Display session details
+            var sessionsList = document.createElement("ul");
+            data.sessions.forEach(function(session) {
+                var sessionItem = document.createElement("li");
+                sessionItem.textContent = "Session ID: " + session.id + ", App ID: " + session.app_id + ", Code: " + session.code + ", Start Time: " + session.start_time + ", End Time: " + session.end_time + ", Created At: " + session.created_at;
+                sessionsList.appendChild(sessionItem);
+            });
+            document.getElementById("stats-container").appendChild(sessionsList);
+        }
+
+        // Fetch date stats for today by default when the page loads
+        window.onload = function() {
+            getDateStats();
+        };
+    </script>
+{#    <a href="/scan">Scan Manually</a>#}
 {% endblock %}

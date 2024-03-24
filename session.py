@@ -1,5 +1,5 @@
 from config import APP_NAMES
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Define Session class
 class Session:
@@ -25,17 +25,32 @@ class Session:
             "code": self.code,
             "start_time": self.start_time,
             "end_time": self.end_time,
-            "duration": self.duration(),
+            "duration": str(self.duration()),
             "scan_time": self.created_at,
         }
 
     def duration(self):
-        return self.end_time - self.start_time
+        return datetime.strptime(self.end_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(self.start_time, "%Y-%m-%d %H:%M:%S")
 
     # returns duration that is in the given date
     def date_duration(self, date):
-        # todo
-        pass
+        # Convert date to datetime object with time set to 00:00:00
+        start_of_date = datetime.combine(date, datetime.min.time())
+        end_of_date = datetime.combine(date, datetime.max.time())
+
+        # Parse session start and end times
+        start_time = datetime.strptime(self.start_time, "%Y-%m-%d %H:%M:%S")
+        end_time = datetime.strptime(self.end_time, "%Y-%m-%d %H:%M:%S")
+
+        # Calculate overlap duration
+        overlap_start = max(start_time, start_of_date)
+        overlap_end = min(end_time, end_of_date)
+
+        # If there's no overlap, return zero duration
+        if overlap_start >= overlap_end:
+            return datetime.min - datetime.min
+
+        return overlap_end - overlap_start
 
     def app_name(self):
         return APP_NAMES.get(self.app_id, "Undefined")

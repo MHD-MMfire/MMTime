@@ -1,7 +1,7 @@
 from config import DB_NAME
 from session import Session
 import scanner
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, abort
 import sqlite3
 from datetime import datetime, timedelta
 from pytz import timezone
@@ -27,7 +27,10 @@ def set_scheduler():
 @app.route('/date', methods=['GET'])
 def select_date():
     selected_date = request.args.get("date")
-    date = datetime.strptime(selected_date, "%Y-%m-%d")
+    try:
+        date = datetime.strptime(selected_date, "%Y-%m-%d")
+    except ValueError:
+        return "time data does not match the correct format", 400
     return jsonify(date_stats(date))
 
 def date_stats(date):
@@ -35,9 +38,9 @@ def date_stats(date):
     sessions_data = date_sessions(date, True)
 
     # Calculate stats
-    date_duration = timedelta()
-    sessions_duration = timedelta()
-    apps = []
+    date_duration = datetime.min - datetime.min  # timedelta()
+    sessions_duration = datetime.min - datetime.min  # timedelta()
+    apps = {}
     sessions = []
     row = 1
     for session in sessions_data:
@@ -45,7 +48,7 @@ def date_stats(date):
         sessions.append(session.as_dict())
         # date
         date_duration += session.date_duration(date)
-        sessions_duration += session.duration(date)
+        sessions_duration += session.duration()
         # app
         if session.app_id not in apps:
             apps[session.app_id] = {"row": row,
@@ -58,9 +61,13 @@ def date_stats(date):
             apps[session.app_id]["sessions_duration"] += session.duration()
             apps[session.app_id]["date_duration"] += session.date_duration(date)
 
+    for k in apps.keys():
+        apps[k]["sessions_duration"] = str(apps[k]["sessions_duration"])
+        apps[k]["date_duration"] = str(apps[k]["date_duration"])
+
     return {
-        "date_duration": date_duration,
-        "sessions_duration": sessions_duration,
+        "date_duration": str(date_duration),
+        "sessions_duration": str(sessions_duration),
         "apps": apps,
         "sessions": sessions,
     }
@@ -76,10 +83,10 @@ def date_sessions(date, include_exceeded_prev_day):
     cursor = conn.cursor()
 
     # Query sessions for today in the timezone
-    q = "SELECT * FROM sessions WHERE DATE(start_time) = ?"
+    q = "SELECT * FROM sessions WHERE DATE(start_time) = DATE(?)"
     params = (date,)
     if include_exceeded_prev_day:
-        q += " OR DATE(end_time) = ?"
+        q += " OR DATE(end_time) = DATE(?)"
         params = (date, date)
     cursor.execute(q, params)
     result = cursor.fetchall()
