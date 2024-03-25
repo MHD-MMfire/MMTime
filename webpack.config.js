@@ -4,7 +4,10 @@ module.exports = {
   entry: './static/js/app.js', // Path to your main JavaScript file
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist') // Output directory
+    path: path.resolve(__dirname, 'static/js') // Output directory
+  },
+  externals: {
+    jquery: 'jQuery'
   },
   module: {
     rules: [

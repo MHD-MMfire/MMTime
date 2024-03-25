@@ -1,4 +1,7 @@
-import 'persian-datepicker/dist/js/persian-datepicker.min.js';
+// import 'jquery/dist/jquery.min';
+import $ from 'jquery';
+import 'persian-date/dist/persian-date.min';
+import 'persian-datepicker/dist/js/persian-datepicker.min';
 //----------------------Time Line------------------------
 
 // Function to generate timeline guides

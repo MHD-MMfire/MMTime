@@ -1,0 +1,14 @@
+/*!
+ * 
+ * persian-date -  1.1.0
+ * Reza Babakhani <babakhani.reza@gmail.com>
+ * http://babakhani.github.io/PersianWebToolkit/docs/persian-date/
+ * Under MIT license 
+ * 
+ * 
+ */
+
+/*!
+ * mustache.js - Logic-less {{mustache}} templates with JavaScript
+ * http://github.com/janl/mustache.js
+ */

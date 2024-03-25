@@ -1,3 +1,27 @@
+/* Regular */
+@font-face {
+    font-family: 'Roboto';
+    src: url('../font/Roboto-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Bold */
+@font-face {
+    font-family: 'Roboto';
+    src: url('../font/Roboto-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* Italic */
+@font-face {
+    font-family: 'Roboto';
+    src: url('../font/Roboto-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
 :root {
     --primary-color: #FF5733; /* Red color */
     --primary-color-light: #ffd1d1; /* Red color light*/
