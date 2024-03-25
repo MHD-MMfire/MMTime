@@ -1,3 +1,5 @@
+//----------------------Time Line------------------------
+
 // Function to generate timeline guides
 function generateGuides() {
     var timelineGuides = document.querySelector('.timeline-guides');
@@ -5,9 +7,22 @@ function generateGuides() {
 
     for (var hour = 0; hour <= 24; hour++) {
         var guideDiv = document.createElement('div');
-        guideDiv.textContent = hour + ':00'; // Display hour
+        guideDiv.textContent = hour + ''; // Display hour
         guideDiv.style.left = (hour * hourWidth) + '%'; // Position guide
         timelineGuides.appendChild(guideDiv);
+    }
+}
+
+// Function to generate vertical rulers on the timeline line
+function generateVerticalRulers() {
+    var timelineLine = document.querySelector('.timeline-line');
+    var hourWidth = 100 / 24;
+
+    for (var hour = 0; hour <= 24; hour++) {
+        var rulerDiv = document.createElement('div');
+        rulerDiv.className = 'timeline-ruler';
+        rulerDiv.style.left = (hour * hourWidth) + '%';
+        timelineLine.appendChild(rulerDiv);
     }
 }
 
@@ -23,6 +38,24 @@ function populateTimeline(sessions) {
         eventDiv.className = 'timeline-event';
         eventDiv.style.left = calculatePosition(startTime) + '%';
         eventDiv.style.width = calculateWidth(startTime, endTime) + '%';
+
+        // Add data attributes
+        eventDiv.setAttribute('data-start-time', session.start_time);
+        eventDiv.setAttribute('data-end-time', session.end_time);
+        eventDiv.setAttribute('data-duration', session.duration);
+        eventDiv.setAttribute('data-app-name', session.app_name);
+
+        // Add event listener for tooltip
+        eventDiv.addEventListener('mouseover', function(ev) {
+            // Show tooltip with session details
+            showTooltip(ev);
+        });
+
+        // Remove tooltip when mouse leaves eventDiv
+        eventDiv.addEventListener('mouseout', function() {
+            // Hide tooltip
+            hideTooltip();
+        });
 
         timelineEvents.appendChild(eventDiv);
     });
@@ -44,14 +77,94 @@ function calculateWidth(startTime, endTime) {
 
 // Example session data (similar to previous code)
 var sessions = [
-    { start_time: '2024-03-23 10:00:00', end_time: '2024-03-23 12:00:00' },
-    { start_time: '2024-03-23 14:00:00', end_time: '2024-03-23 15:30:00' },
+    { start_time: '2024-03-23 10:00:00', end_time: '2024-03-23 12:00:00', duration: '2:00', app_name: 'Dota 2' },
+    { start_time: '2024-03-23 14:00:00', end_time: '2024-03-23 15:30:00', duration: '1:30', app_name: 'Dota 2'  },
     // Add more session data as needed
 ];
 
 // Generate timeline guides and populate the timeline with session data
 generateGuides();
+generateVerticalRulers();
 populateTimeline(sessions);
+
+//----------------TOOLTIP--------------------------
+
+
+const tooltip = document.querySelector('.tooltip');
+
+// Function to show tooltip
+function showTooltip(event) {
+    const startTime = event.target.dataset.startTime;
+    const endTime = event.target.dataset.endTime;
+    const duration = event.target.dataset.duration;
+    const appName = event.target.dataset.appName;
+
+    // Set tooltip content
+    tooltip.innerHTML = `
+        <strong>Start Time:</strong> <span class="primary">${startTime}</span><br>
+        <strong>End Time:</strong> <span class="primary">${endTime}</span><br>
+        <strong>Duration:</strong> <span class="primary">${duration}</span><br>
+        <strong>App Name:</strong> <span class="primary">${appName}</span>
+    `;
+
+    // Position tooltip relative to the event
+    const rect = event.target.getBoundingClientRect();
+    tooltip.style.bottom = `${window.innerHeight - rect.top + 10}px`;
+    tooltip.style.left = `${rect.left}px`;
+
+    // Show tooltip
+    tooltip.style.display = 'block';
+}
+
+function hideTooltip() {
+    tooltip.style.display = 'none';
+}
+
+//------------------------App Table---------------------------
+
+// Sample test data for apps
+const appsData = [
+    { row: 1, app_id: 101, app_name: 'App 1', duration: '2:30', date_duration: '1:15' },
+    { row: 2, app_id: 102, app_name: 'App 2', duration: '1:45', date_duration: '0:45' },
+    { row: 3, app_id: 103, app_name: 'App 3', duration: '3:15', date_duration: '1:30' },
+    // Add more sample data as needed
+];
+
+// Function to populate the apps table
+function populateAppsTable() {
+    const appsTableBody = document.getElementById('apps-table-body');
+
+    appsData.forEach(app => {
+        const row = document.createElement('tr');
+
+        // Populate table cells
+        row.innerHTML = `
+            <td>${app.row}</td>
+            <td>${app.app_id}</td>
+            <td>${app.app_name}</td>
+            <td>${app.duration}</td>
+            <td>${app.date_duration}</td>
+        `;
+
+          // Add purpose class for color coding
+        row.classList.add("trow");
+
+        // Add hover effect
+        row.addEventListener('mouseenter', () => {
+            row.classList.add('hover');
+        });
+
+        row.addEventListener('mouseleave', () => {
+            row.classList.remove('hover');
+        });
+
+        // Append row to table body
+        appsTableBody.appendChild(row);
+    });
+}
+
+// Call the function to populate the apps table
+populateAppsTable();
 
 
 /*

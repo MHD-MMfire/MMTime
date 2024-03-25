@@ -2,29 +2,33 @@
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
     <div class="container">
         <div class="left-panel">
             <!-- Date Stats -->
+{#            <h2>Date Stats</h2>#}
             <div class="date-stats">
-                <h2>Date Stats</h2>
-                <p>Sessions Duration: <span id="sessions-duration"></span></p>
-                <p>Date Duration: <span id="date-duration"></span></p>
+                <p><strong>Sessions Duration:</strong> <span id="sessions-duration" class="primary"></span></p>
+                <p><strong>Date Duration:</strong> <span id="date-duration" class="primary"></span></p>
             </div>
             <!-- Horizontal Timeline -->
-            <div class="left-panel-timeline">
-                <h2>Timeline</h2>
-                <div class="timeline">
-                    <div class="timeline-line"></div>
-                    <div class="timeline-guides"></div>
-                    <div class="timeline-events"></div>
-                </div>
+            <h3>Timeline</h3>
+            <div class="timeline">
+                <div class="timeline-line"></div>
+                <div class="timeline-events"></div>
+                <div class="timeline-guides"></div>
+                <div class="tooltip"></div>
             </div>
+
             <!-- Apps Table -->
-            <h2>Apps</h2>
-            <table id="apps-table">
+            <h3>Apps</h3>
+            <table id="apps-table" class="table">
                 <thead>
                     <tr>
                         <th>Row</th>
@@ -34,13 +38,13 @@
                         <th>Date Duration</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="apps-table-body">
                     <!-- Apps table content will be populated dynamically -->
                 </tbody>
             </table>
             <!-- Sessions Table -->
-            <h2>Sessions</h2>
-            <table id="sessions-table">
+            <h3>Sessions</h3>
+            <table id="sessions-table" class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -53,23 +57,23 @@
                         <th>Code</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="sessions-table-body">
                     <!-- Sessions table content will be populated dynamically -->
                 </tbody>
             </table>
         </div>
         <div class="right-panel">
             <!-- Solar Hijri Calendar -->
+            <h2>Select Date</h2>
             <div id="solar-hijri-calendar">
                 <!-- Calendar content will be populated dynamically -->
             </div>
+            <a href="/scan">Scan Manually</a>
+            <a href="/scheduler">Create Scheduling Task</a>
         </div>
     </div>
     <!-- Include JavaScript scripts -->
 {#    TODO: don't use CDN#}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-
-    <a href="/scan">Scan Manually</a>
-    <a href="/scheduler">Create Scheduling Task</a>
 {% endblock %}

@@ -1,59 +1,164 @@
-/* Left panel timeline styles */
-.left-panel-timeline {
-    margin-top: 20px;
+:root {
+    --primary-color: #FF5733; /* Red color */
+    --primary-color-light: #ffd1d1; /* Red color light*/
+    --secondary-color: #ddd; /* Grey color #757575 */
+    --secondary-color-light: #f2f2f2; /* Grey color light*/
+    --text-color: #333333;
 }
+
+*, *:before, *:after {
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+}
+
+.container {
+    display: flex;
+    color: var(--text-color);
+}
+
+.left-panel,
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+}
+
+.left-panel {
+    flex: 0 0 65%; /* Take 65% of the container's width */
+}
+
+.right-panel {
+    flex: 1; /* Take remaining space */
+}
+
+.date-stats {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly; /* Space items evenly along the main axis */
+    align-items: center; /* Center items vertically */
+}
+
+.primary {
+    color: var(--primary-color);
+}
+
+
+/*-------------------------Timeline------------------------------*/
+
 
 .timeline {
     position: relative;
-    border: 1px solid #ccc;
-    padding: 10px;
-    overflow-x: auto;
+    /*border: 1px solid #ccc;*/
+    overflow-x: hidden;
+    width: 100%;
+    padding: 25px 1% 1%;
 }
 
 .timeline-line {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 2px; /* Adjust line height as needed */
-    background-color: #ccc;
+    position: relative;
+    height: 3px;
+    background-color: #aaa;
 }
 
 .timeline-guides {
     position: relative;
-    height: 20px; /* Adjust height as needed */
 }
 
 .timeline-guides:before {
     content: "";
     position: absolute;
     top: 0;
-    left: 0;
+    bottom: 0;
     width: 100%;
-    height: 100%;
-    border-top: 1px solid #ccc;
+    /*border-left: 1px solid #ccc;*/
 }
 
 .timeline-guides div {
     position: absolute;
     bottom: 0;
-    font-size: 10px; /* Adjust font size as needed */
+    color: #444;
+    font-size: 0.8em;
+    transform: translateX(-50%);
 }
 
 .timeline-events {
     position: relative;
-    height: 50px; /* Adjust height as needed */
+    height: 40px;
+    z-index: 10;
 }
 
 .timeline-event {
     position: absolute;
-    background-color: red;
+    background-color: var(--primary-color);
+    border-radius: 5px;
     opacity: 0.8;
-    height: 50px;
-
+    top: -25px;
+    height: 45px;
 }
 
 .timeline-event:hover {
     opacity: 1;
+}
 
+/*-------------------------Tooltip------------------------------*/
+
+
+.tooltip {
+    position: fixed;
+    display: none; /* Initially hidden */
+    background-color: var(--secondary-color-light);
+    border: 1px solid var(--secondary-color);
+    border-radius: 10px;
+    padding: 5px;
+    z-index: 999; /* Ensure tooltip appears on top of other elements */
+}
+
+.timeline-ruler {
+    position: absolute;
+    top: 0;
+    width: 2px; /* Adjust width as needed */
+    height: 6px;
+    background-color: #888;
+    transform: translateX(-50%) translateY(-25%);
+
+}
+
+/*-------------------------Tables------------------------------*/
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 8px;
+    border: 1px solid var(--secondary-color);
+}
+
+.table th {
+    background-color: var(--secondary-color-light);
+    text-align: left;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: var(--secondary-color-light);
+}
+
+.table tbody tr:hover {
+    background-color: var(--secondary-color);
+}
+
+.trow {
+    background-color: var(--primary-color-light); /* Red */
+}
+
+.trow2 {
+    background-color: #bdecb6; /* Green */
+}
+
+.hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease-in-out;
 }
