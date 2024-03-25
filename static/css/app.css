@@ -20,7 +20,6 @@
 .right-panel {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center vertically */
     align-items: center; /* Center horizontally */
 }
 
@@ -92,7 +91,7 @@
 .timeline-event {
     position: absolute;
     background-color: var(--primary-color);
-    border-radius: 5px;
+    border-radius: 8px;
     opacity: 0.8;
     top: -25px;
     height: 45px;
@@ -156,6 +155,7 @@
 
 .trow2 {
     background-color: #bdecb6; /* Green */
+    /*background-color: #a8dadc; !* Blue *!*/
 }
 
 .hover {

@@ -77,8 +77,11 @@ function calculateWidth(startTime, endTime) {
 
 // Example session data (similar to previous code)
 var sessions = [
-    { start_time: '2024-03-23 10:00:00', end_time: '2024-03-23 12:00:00', duration: '2:00', app_name: 'Dota 2' },
-    { start_time: '2024-03-23 14:00:00', end_time: '2024-03-23 15:30:00', duration: '1:30', app_name: 'Dota 2'  },
+    { start_time: '2024-03-23 10:00:00', end_time: '2024-03-23 12:00:00', duration: '2:00', app_name: 'Dota 2', id: 1, app_id: 570, scan_time: '2024-03-23 12:00:00', code: 'nfl8sdfsdfdsfsd' },
+    { start_time: '2024-03-23 14:00:00', end_time: '2024-03-23 15:30:00', duration: '1:30', app_name: 'Dota 2',  id: 2, app_id: 570, scan_time: '2024-03-23 12:00:00', code: 'nfldfdsfsd' },
+    { start_time: '2024-03-23 14:00:00', end_time: '2024-03-23 15:30:00', duration: '1:30', app_name: 'Dota 2',  id: 2, app_id: 570, scan_time: '2024-03-23 12:00:00', code: 'nfldfdsfsd' },
+    { start_time: '2024-03-22 23:50:00', end_time: '2024-03-23 1:30:00', duration: '1:30', app_name: 'Dota 2',  id: 2, app_id: 570, scan_time: '2024-03-23 12:00:00', code: 'nfldfdsfsd' },
+    { start_time: '2024-03-23 23:00:00', end_time: '2024-03-24 5:30:00', duration: '1:30', app_name: 'Dota 2',  id: 2, app_id: 570, scan_time: '2024-03-23 12:00:00', code: 'nfldfdsfsd' },
     // Add more session data as needed
 ];
 
@@ -120,7 +123,7 @@ function hideTooltip() {
     tooltip.style.display = 'none';
 }
 
-//------------------------App Table---------------------------
+//------------------------Apps Table---------------------------
 
 // Sample test data for apps
 const appsData = [
@@ -166,6 +169,44 @@ function populateAppsTable() {
 // Call the function to populate the apps table
 populateAppsTable();
 
+//------------------------Sessions Table---------------------------
+function populateSessionsTable() {
+    const appsTableBody = document.getElementById('sessions-table-body');
+
+    sessions.forEach(session => {
+        const row = document.createElement('tr');
+
+        // Populate table cells
+        row.innerHTML = `
+            <td>${session.id}</td>
+            <td>${session.app_id}</td>
+            <td>${session.app_name}</td>
+            <td>${session.start_time}</td>
+            <td>${session.end_time}</td>
+            <td>${session.duration}</td>
+            <td>${session.scan_time}</td>
+            <td>${session.code}</td>
+        `;
+
+          // Add purpose class for color coding
+        row.classList.add("trow2");
+
+        // Add hover effect
+        row.addEventListener('mouseenter', () => {
+            row.classList.add('hover');
+        });
+
+        row.addEventListener('mouseleave', () => {
+            row.classList.remove('hover');
+        });
+
+        // Append row to table body
+        appsTableBody.appendChild(row);
+    });
+}
+
+// Call the function to populate the apps table
+populateSessionsTable();
 
 /*
 
