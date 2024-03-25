@@ -1,7 +1,7 @@
 @echo off
 
 REM Define Flask executable path
-set EXE_PATH="path\to\your\flask\executable\MMTime.exe"
+set EXE_PATH="dist\app\app.exe"
 
 REM Set Flask app to production mode
 set FLASK_ENV=production
