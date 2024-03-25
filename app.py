@@ -22,7 +22,8 @@ def scan():
 @app.route('/scheduler')
 def set_scheduler():
     # todo: create task in task scheduler
-    return render_template('job.html', message="Task successfully created in Windows Task Scheduler. You can close this page.")
+    return render_template('job.html',
+                           message="Task successfully created in Windows Task Scheduler. You can close this page.")
 
 @app.route('/date', methods=['GET'])
 def select_date():

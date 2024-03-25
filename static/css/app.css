@@ -186,3 +186,44 @@
     transform: scale(1.02);
     transition: transform 0.2s ease-in-out;
 }
+
+/*----------------------------Right Panel------------------------------*/
+
+/* Style for input field */
+.input-wrapper input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    font-size: 20px;
+    outline: none;
+    text-align: center;
+}
+
+/* Style for buttons */
+.button-wrapper {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    flex-direction: column;
+}
+
+.button {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: var(--primary-color);
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    margin: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #E0492F; /* Darker shade of primary color on hover */
+}
+

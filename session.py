@@ -30,7 +30,8 @@ class Session:
         }
 
     def duration(self):
-        return datetime.strptime(self.end_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(self.start_time, "%Y-%m-%d %H:%M:%S")
+        return datetime.strptime(self.end_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(self.start_time,
+                                                                                         "%Y-%m-%d %H:%M:%S")
 
     # returns duration that is in the given date
     def date_duration(self, date):

@@ -62,20 +62,25 @@ def insert_db(session, conn):
     finally:
         cursor.close()
 
+def scan_file(path, conn):
+    with open(path, 'r') as f:
+        for line in f:
+            session_info = parse_log(line)
+            if session_info:
+                insert_db(session_info, conn)
+
 # Main function to parse log file and insert session objects into database
 def main():
-    # todo: compat_log.previous.txt
     steam_log = STEAM_PATH + "/logs/compat_log.txt"
+    steam_log_prev = STEAM_PATH + "/logs/compat_log.previous.txt"
     t = time()
     print("Connecting to database...")
     with sqlite3.connect(DB_NAME) as conn:
         create_db(conn)
         print("Scanning Log File...")
-        with open(steam_log, 'r') as f:
-            for line in f:
-                session_info = parse_log(line)
-                if session_info:
-                    insert_db(session_info, conn)
+        scan_file(steam_log_prev, conn)
+        scan_file(steam_log, conn)
+
     print(f"Scan Complete! Database Updated! Job took {time() - t} seconds.")
 
 if __name__ == "__main__":
