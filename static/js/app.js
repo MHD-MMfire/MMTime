@@ -1,3 +1,4 @@
+import 'persian-datepicker/dist/js/persian-datepicker.min.js';
 //----------------------Time Line------------------------
 
 // Function to generate timeline guides
@@ -207,6 +208,26 @@ function populateSessionsTable() {
 
 // Call the function to populate the apps table
 populateSessionsTable();
+
+/*--------------------------Date Picker----------------------------*/
+
+// Initialize Persian Date Picker
+  $(document).ready(function() {
+    $("#datepicker").pDatepicker({
+      format: 'YYYY-MM-DD', // Date format
+      initialValue: false, // Do not set an initial value
+      observer: true, // Enable observer mode
+      responsive: true, // Make the calendar responsive
+      autoClose: true, // Automatically close the calendar after selecting a date
+      calendar: {
+        persian: {
+          locale: 'en' // Set calendar language to English
+        }
+      }
+    });
+  });
+
+
 
 /*
 
