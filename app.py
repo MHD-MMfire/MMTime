@@ -62,12 +62,13 @@ def date_stats(date):
             apps[session.app_id]["date_duration"] += session.date_duration(date)
 
     for k in apps.keys():
-        apps[k]["duration"] = str(apps[k]["duration"])
-        apps[k]["date_duration"] = str(apps[k]["date_duration"])
+        apps[k]["duration"] = str(apps[k]["duration"]).split('.')[0]
+        apps[k]["date_duration"] = str(apps[k]["date_duration"]).split('.')[0]
 
     return {
-        "date_duration": str(date_duration),
-        "sessions_duration": str(sessions_duration),
+        "date": date.strftime("%Y-%m-%d"),
+        "date_duration": str(date_duration).split('.')[0],
+        "sessions_duration": str(sessions_duration).split('.')[0],
         "apps": apps,
         "sessions": sessions,
     }

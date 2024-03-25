@@ -48,7 +48,7 @@
 }
 
 .left-panel {
-    flex: 0 0 65%; /* Take 65% of the container's width */
+    flex: 0 0 75%; /* Take 65% of the container's width */
 }
 
 .right-panel {

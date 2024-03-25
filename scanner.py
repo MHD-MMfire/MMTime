@@ -64,6 +64,7 @@ def insert_db(session, conn):
 
 # Main function to parse log file and insert session objects into database
 def main():
+    # todo: compat_log.previous.txt
     steam_log = STEAM_PATH + "/logs/compat_log.txt"
     t = time()
     print("Connecting to database...")

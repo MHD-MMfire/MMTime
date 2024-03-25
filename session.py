@@ -25,7 +25,7 @@ class Session:
             "code": self.code,
             "start_time": self.start_time,
             "end_time": self.end_time,
-            "duration": str(self.duration()),
+            "duration": str(self.duration()).split('.')[0],
             "scan_time": self.created_at,
         }
 
