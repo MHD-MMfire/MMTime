@@ -3,3 +3,4 @@ sessions.db
 misc/
 node_modules/
 dist/
+build/
