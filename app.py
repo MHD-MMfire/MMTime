@@ -53,16 +53,16 @@ def date_stats(date):
         if session.app_id not in apps:
             apps[session.app_id] = {"row": row,
                                     "app_id": session.app_id,
-                                    "name": session.app_name(),
-                                    "sessions_duration": session.duration(),
+                                    "app_name": session.app_name(),
+                                    "duration": session.duration(),
                                     "date_duration": session.date_duration(date)}
             row += 1
         else:
-            apps[session.app_id]["sessions_duration"] += session.duration()
+            apps[session.app_id]["duration"] += session.duration()
             apps[session.app_id]["date_duration"] += session.date_duration(date)
 
     for k in apps.keys():
-        apps[k]["sessions_duration"] = str(apps[k]["sessions_duration"])
+        apps[k]["duration"] = str(apps[k]["duration"])
         apps[k]["date_duration"] = str(apps[k]["date_duration"])
 
     return {

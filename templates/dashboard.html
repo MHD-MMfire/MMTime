@@ -62,16 +62,14 @@
         </div>
         <div class="right-panel">
             <!-- Solar Hijri Calendar -->
-            <h2>Select Date</h2>
-            <input type="text" id="datepicker" placeholder="Select Date">
-            <div id="solar-hijri-calendar">
-                <!-- Calendar content will be populated dynamically -->
-            </div>
+            <h2><label for="datepicker">Select Date</label></h2>
+            <input type="text" id="datepicker" placeholder="Select Date" readonly>
             <a href="/scan">Scan Manually</a>
             <a href="/scheduler">Create Scheduling Task</a>
         </div>
     </div>
     <!-- Include JavaScript scripts -->
     <script src="{{ url_for('static', filename='js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/persian-date.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bundle.js') }}"></script>
 {% endblock %}
