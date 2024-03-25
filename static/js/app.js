@@ -128,7 +128,10 @@ function showTooltip(event) {
     // Position tooltip relative to the event
     const rect = event.target.getBoundingClientRect();
     tooltip.style.bottom = `${window.innerHeight - rect.top + 10}px`;
-    tooltip.style.left = `${rect.left}px`;
+    if (rect.left < 0)
+        tooltip.style.left = 0;
+    else
+        tooltip.style.left = `${rect.left}px`;
 
     // Show tooltip
     tooltip.style.display = 'block';
