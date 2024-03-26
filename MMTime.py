@@ -8,7 +8,6 @@ from pytz import timezone
 import webbrowser
 
 app = Flask(__name__)
-
 webbrowser.open_new_tab("http://127.0.0.1:5000")
 
 @app.route('/')

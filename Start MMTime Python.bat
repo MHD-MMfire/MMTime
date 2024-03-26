@@ -1,10 +1,7 @@
 @echo off
 
-REM Set Flask app to production mode
-set FLASK_ENV=production
-
 REM Start Flask server
-start "MMTime Server" cmd /k "set FLASK_ENV=production && %cd%\venv\Scripts\python.exe %cd%\MMTime.py"
+start "MMTime Server" cmd /k "%cd%\venv\Scripts\python.exe %cd%\MMTime.py"
 
 REM Display message while waiting for server to start
 echo "Wait for server to start..."
