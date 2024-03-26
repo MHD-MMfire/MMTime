@@ -54,4 +54,4 @@ class Session:
         return overlap_end - overlap_start
 
     def app_name(self):
-        return APP_NAMES.get(self.app_id, "Undefined")
+        return APP_NAMES.get(str(self.app_id), "Undefined")
