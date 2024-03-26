@@ -5,8 +5,11 @@ from flask import Flask, render_template, jsonify, request
 import sqlite3
 from datetime import datetime, timedelta
 from pytz import timezone
+import webbrowser
 
 app = Flask(__name__)
+
+webbrowser.open_new_tab("http://127.0.0.1:5000")
 
 @app.route('/')
 def dashboard():
