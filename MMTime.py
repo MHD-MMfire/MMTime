@@ -101,4 +101,4 @@ def connect_db():
     return sqlite3.connect(DB_NAME)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

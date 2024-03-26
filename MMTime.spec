@@ -2,10 +2,10 @@
 
 
 a = Analysis(
-    ['app.py'],
+    ['MMTime.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('templates', 'templates'), ('static', 'static')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -20,7 +20,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='app',
+    name='MMTime',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -29,6 +29,7 @@ exe = EXE(
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
+    icon='static/favicon.ico',
     codesign_identity=None,
     entitlements_file=None,
 )
@@ -39,5 +40,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='app',
+    name='MMTime',
 )
