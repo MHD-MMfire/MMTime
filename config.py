@@ -3,6 +3,9 @@ import configparser
 DEFAULT_CONFIG = """[Paths]
 STEAM_PATH = C:/Program Files (x86)/Steam
 
+[TimeZone]
+TIMEZONE = Asia/Tehran
+
 [Database]
 DB_NAME = sessions.db
 
@@ -26,4 +29,5 @@ if not config.sections():
 # Get configuration values
 STEAM_PATH = config['Paths']['STEAM_PATH']
 DB_NAME = config['Database']['DB_NAME']
+TIMEZONE = config['TimeZone']['TIMEZONE']
 APP_NAMES = dict(config['AppNames'])
