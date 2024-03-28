@@ -1,7 +1,7 @@
 import configparser
 
 DEFAULT_CONFIG = """[Paths]
-STEAM_PATH = F:/Games/Steam
+STEAM_PATH = C:/Program Files (x86)/Steam
 
 [Database]
 DB_NAME = sessions.db
