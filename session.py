@@ -30,11 +30,15 @@ class Session:
         }
 
     def duration(self):
+        if not self.end_time:
+            return datetime.min - datetime.min
         return datetime.strptime(self.end_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(self.start_time,
                                                                                          "%Y-%m-%d %H:%M:%S")
 
     # returns duration that is in the given date
     def date_duration(self, date):
+        if not self.end_time:
+            return datetime.min - datetime.min
         # Convert date to datetime object with time set to 00:00:00
         start_of_date = datetime.combine(date, datetime.min.time())
         end_of_date = datetime.combine(date, datetime.max.time())

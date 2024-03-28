@@ -1,4 +1,4 @@
-from config import DB_NAME
+from config import DB_NAME, TIMEZONE
 from session import Session
 import scanner
 from flask import Flask, render_template, jsonify, request
@@ -32,7 +32,7 @@ def select_date():
     selected_date = request.args.get("date")
     try:
         date = datetime.strptime(selected_date, "%Y-%m-%d")
-    except ValueError:
+    except ValueError or TypeError:
         return "time data does not match the correct format", 400
     return jsonify(date_stats(date))
 
@@ -74,11 +74,12 @@ def date_stats(date):
         "sessions_duration": str(sessions_duration).split('.')[0],
         "apps": apps,
         "sessions": sessions,
+        "timezone": TIMEZONE,
     }
 
 def relative_date_sessions(days_before=0, include_exceeded_prev_day=True):
     # Get the date in the timezone
-    date_tz = datetime.now(timezone("Asia/Tehran")).date() - timedelta(days=days_before)
+    date_tz = datetime.now(timezone(TIMEZONE)).date() - timedelta(days=days_before)
     return date_sessions(date_tz, include_exceeded_prev_day)
 
 def date_sessions(date, include_exceeded_prev_day):
