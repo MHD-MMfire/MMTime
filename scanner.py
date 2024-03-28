@@ -46,16 +46,20 @@ def insert_db(session, conn):
             cursor.execute('''INSERT INTO sessions (app_id, code, start_time, end_time, created_at)
                               VALUES (?, ?, ?, ?, ?)''',
                            (session.app_id, session.code, session.start_time, session.end_time, session.created_at))
+            conn.commit()
         else:
-            cursor.execute('''UPDATE sessions
-                      SET end_time = ?
-                      WHERE id = (SELECT id
+            cursor.execute('''SELECT id
                                   FROM sessions
-                                  WHERE app_id = ? AND end_time IS NULL
+                                  WHERE app_id = ? AND end_time IS NULL AND start_time < ?
                                   ORDER BY start_time DESC
-                                  LIMIT 1)''',
-                           (session[1], session[0]))
-        conn.commit()
+                                  LIMIT 1''',
+                           (session[0], session[1]))
+            row = cursor.fetchone()
+            if row is not None:
+                id_value = row[0]
+                cursor.execute('UPDATE sessions SET end_time = ? WHERE id = ?',
+                               (id_value,))
+                conn.commit()
 
     except sqlite3.IntegrityError as e:
         pass
