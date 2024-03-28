@@ -53,12 +53,12 @@ def insert_db(session, conn):
                                   WHERE app_id = ? AND end_time IS NULL AND start_time < ?
                                   ORDER BY start_time DESC
                                   LIMIT 1''',
-                           (session[0], session[1]))
+                           (session[0], session[1]))  # start time < end time
             row = cursor.fetchone()
             if row is not None:
                 id_value = row[0]
                 cursor.execute('UPDATE sessions SET end_time = ? WHERE id = ?',
-                               (id_value,))
+                               (session[1], id_value))
                 conn.commit()
 
     except sqlite3.IntegrityError as e:
