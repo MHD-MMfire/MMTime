@@ -251,7 +251,10 @@ function formatTimeRangeRelativeToBaseDate(fromDatetime, toDatetime, baseDate) {
     let startTime, endTime;
 
     var timeFormat = function (date) {
-        return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,});
+        let res = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,});
+        if (res.startsWith("24:"))
+            res = "00:" + res.substring(3);
+        return res;
     }
 
     if (fromDate.toDateString() === toDate.toDateString()) {
