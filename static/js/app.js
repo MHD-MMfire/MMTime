@@ -194,7 +194,7 @@ function populateSessionsTable(sessions) {
             <td>${session.end_time}</td>
             <td>${session.duration}</td>
             <td>${session.scan_time}</td>
-            <td>${session.code}</td>
+            <td>${session.pid}</td>
         `;
 
         // Add purpose class for color coding

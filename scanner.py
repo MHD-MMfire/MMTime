@@ -7,20 +7,20 @@ from time import time
 
 # Function to parse log lines and extract session information
 def parse_log(log_line):
-    start_session_pattern = r'\[(.*?)\] StartSession: appID (\d+) session (\w+)'
-    end_session_pattern = r'\[(.*?)\] OnAppLifetimeNotification: release session\(s\) for appID (\d+)'
+    start_session_pattern = r'\[(.*?)\] AppID (\d+) adding PID (\d+)'
+    end_session_pattern = r'\[(.*?)\] AppID (\d+) no longer tracking PID (\d+)'
 
     start_match = re.match(start_session_pattern, log_line)
     end_match = re.match(end_session_pattern, log_line)
 
     if start_match:
-        timestamp_str, app_id, code = start_match.groups()
+        timestamp_str, app_id, pid = start_match.groups()
         start_time = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
-        return Session(int(app_id), code, start_time)
+        return Session(int(app_id), pid, start_time)
     elif end_match:
-        timestamp_str, app_id = end_match.groups()
+        timestamp_str, app_id, pid = end_match.groups()
         end_time = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
-        return int(app_id), end_time
+        return int(app_id), pid, end_time
     else:
         return None
 
@@ -30,10 +30,11 @@ def create_db(conn):
     cursor.execute('''CREATE TABLE IF NOT EXISTS sessions (
                           id INTEGER PRIMARY KEY,
                           app_id INTEGER NOT NULL,
-                          code TEXT UNIQUE NOT NULL,
-                          start_time TIMESTAMP NOT NULL,
-                          end_time TIMESTAMP,
-                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                          pid INTEGER NOT NULL,
+                          start_time DATETIME NOT NULL,
+                          end_time DATETIME,
+                          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                          UNIQUE(app_id, pid, start_time)
                           )''')
     cursor.close()
     conn.commit()
@@ -43,22 +44,25 @@ def insert_db(session, conn):
     cursor = conn.cursor()
     try:
         if isinstance(session, Session):
-            cursor.execute('''INSERT INTO sessions (app_id, code, start_time, end_time, created_at)
+            cursor.execute('''INSERT INTO sessions (app_id, pid, start_time, end_time, created_at)
                               VALUES (?, ?, ?, ?, ?)''',
-                           (session.app_id, session.code, session.start_time, session.end_time, session.created_at))
+                           (session.app_id, session.pid, session.start_time, session.end_time, session.created_at))
             conn.commit()
         else:
+            app_id = session[0]
+            pid = session[1]
+            end_time = session[2]
             cursor.execute('''SELECT id
                                   FROM sessions
-                                  WHERE app_id = ? AND end_time IS NULL AND start_time < ?
+                                  WHERE app_id = ? AND end_time IS NULL AND pid = ? AND start_time < ?
                                   ORDER BY start_time DESC
                                   LIMIT 1''',
-                           (session[0], session[1]))  # start time < end time
+                           (app_id, pid, end_time))  # start time < end time
             row = cursor.fetchone()
             if row is not None:
                 id_value = row[0]
                 cursor.execute('UPDATE sessions SET end_time = ? WHERE id = ?',
-                               (session[1], id_value))
+                               (end_time, id_value))
                 conn.commit()
 
     except sqlite3.IntegrityError as e:
@@ -75,14 +79,12 @@ def scan_file(path, conn):
 
 # Main function to parse log file and insert session objects into database
 def main():
-    steam_log = STEAM_PATH + "/logs/compat_log.txt"
-    steam_log_prev = STEAM_PATH + "/logs/compat_log.previous.txt"
+    steam_log = STEAM_PATH + "/logs/gameprocess_log.txt"
     t = time()
     print("Connecting to database...")
     with sqlite3.connect(DB_NAME) as conn:
         create_db(conn)
         print("Scanning Log File...")
-        scan_file(steam_log_prev, conn)
         scan_file(steam_log, conn)
 
     print(f"Scan Complete! Database Updated! Job took {time() - t} seconds.")

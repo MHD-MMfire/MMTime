@@ -1,4 +1,5 @@
 .idea/
+sessions.db.old
 sessions.db
 misc/
 node_modules/

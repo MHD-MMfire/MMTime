@@ -3,10 +3,10 @@ from datetime import datetime, timedelta
 
 # Define Session class
 class Session:
-    def __init__(self, app_id, code, start_time, end_time=None, created_at=None, s_id=None):
+    def __init__(self, app_id, pid, start_time, end_time=None, created_at=None, s_id=None):
         self.id = s_id
         self.app_id = app_id
-        self.code = code
+        self.pid = pid
         self.start_time = start_time
         self.end_time = end_time
         self.created_at = created_at or datetime.now()
@@ -22,7 +22,7 @@ class Session:
             "id": self.id,
             "app_id": self.app_id,
             "app_name": self.app_name(),
-            "code": self.code,
+            "pid": self.pid,
             "start_time": self.start_time,
             "end_time": self.end_time,
             "duration": str(self.duration()).split('.')[0],

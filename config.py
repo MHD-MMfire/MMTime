@@ -12,6 +12,7 @@ DB_NAME = sessions.db
 [AppNames]
 570 = Dota 2
 359550 = Rainbow Six Siege
+730=Counter Strike 2
 """
 
 # Initialize the configparser
