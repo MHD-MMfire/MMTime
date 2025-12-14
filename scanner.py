@@ -5,8 +5,13 @@ import sqlite3
 from datetime import datetime
 from time import time
 
+blacklist_names = ["UbisoftGameLauncher.exe"]
+blacklist_pids = set()
+
 # Function to parse log lines and extract session information
 def parse_log(log_line):
+    global blacklist_names, blacklist_pids
+
     start_session_pattern = r'\[(.*?)\] AppID (\d+) adding PID (\d+)'
     end_session_pattern = r'\[(.*?)\] AppID (\d+) no longer tracking PID (\d+)'
 
@@ -16,10 +21,21 @@ def parse_log(log_line):
     if start_match:
         timestamp_str, app_id, pid = start_match.groups()
         start_time = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
+
+        # Check if blacklisted
+        if any(blacklist_name.lower() in log_line.lower() for blacklist_name in blacklist_names):
+            blacklist_pids.add(pid)
+            return None
+
         return Session(int(app_id), pid, start_time)
     elif end_match:
         timestamp_str, app_id, pid = end_match.groups()
         end_time = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
+
+        if pid in blacklist_pids:
+            blacklist_pids.remove(pid)
+            return None
+
         return int(app_id), pid, end_time
     else:
         return None

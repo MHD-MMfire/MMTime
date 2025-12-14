@@ -1,6 +1,5 @@
 .idea/
-sessions.db.old
-sessions.db
+sessions.db*
 misc/
 node_modules/
 dist/
