@@ -12,7 +12,7 @@ blacklist_pids = set()
 def parse_log(log_line):
     global blacklist_names, blacklist_pids
 
-    start_session_pattern = r'\[(.*?)\] AppID (\d+) adding PID (\d+)'
+    start_session_pattern = r'\[(.*?)\] AppID (\d+) adding PID (\d+) as a tracked process ""'
     end_session_pattern = r'\[(.*?)\] AppID (\d+) no longer tracking PID (\d+)'
 
     start_match = re.match(start_session_pattern, log_line)
