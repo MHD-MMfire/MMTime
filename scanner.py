@@ -7,6 +7,7 @@ from time import time
 
 blacklist_names = ["UbisoftGameLauncher.exe"]
 blacklist_pids = set()
+active_pids_by_app = {}
 
 # Function to parse log lines and extract session information
 def parse_log(log_line):
@@ -27,6 +28,13 @@ def parse_log(log_line):
             blacklist_pids.add(pid)
             return None
 
+        # Check if app is already active (dictionary is redundant)
+        if app_id in active_pids_by_app:
+            return None
+        else:
+            active_pids_by_app[app_id] = set()
+        active_pids_by_app[app_id].add(pid)
+
         return Session(int(app_id), pid, start_time)
     elif end_match:
         timestamp_str, app_id, pid = end_match.groups()
@@ -34,6 +42,11 @@ def parse_log(log_line):
 
         if pid in blacklist_pids:
             blacklist_pids.remove(pid)
+            return None
+
+        if app_id in active_pids_by_app:
+            if pid in active_pids_by_app[app_id]:
+                del active_pids_by_app[app_id]
             return None
 
         return int(app_id), pid, end_time
