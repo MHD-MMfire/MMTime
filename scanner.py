@@ -7,11 +7,12 @@ from time import time
 
 blacklist_names = ["UbisoftGameLauncher.exe"]
 blacklist_pids = set()
-active_pids_by_app = {}
+active_app = None
+active_pid = None
 
 # Function to parse log lines and extract session information
 def parse_log(log_line):
-    global blacklist_names, blacklist_pids
+    global blacklist_names, blacklist_pids, active_app, active_pid
 
     start_session_pattern = r'\[(.*?)\] AppID (\d+) adding PID (\d+) as a tracked process ""'
     end_session_pattern = r'\[(.*?)\] AppID (\d+) no longer tracking PID (\d+)'
@@ -28,12 +29,11 @@ def parse_log(log_line):
             blacklist_pids.add(pid)
             return None
 
-        # Check if app is already active (dictionary is redundant)
-        if app_id in active_pids_by_app:
+        # if same app is already running, skip this
+        if active_app == app_id:
             return None
-        else:
-            active_pids_by_app[app_id] = set()
-        active_pids_by_app[app_id].add(pid)
+        active_app = app_id
+        active_pid = pid
 
         return Session(int(app_id), pid, start_time)
     elif end_match:
@@ -44,14 +44,12 @@ def parse_log(log_line):
             blacklist_pids.remove(pid)
             return None
 
-        if app_id in active_pids_by_app:
-            if pid in active_pids_by_app[app_id]:
-                del active_pids_by_app[app_id]
-            return None
+        if active_app == app_id and active_pid == pid:
+            active_app = None
+            active_pid = None
+            return int(app_id), pid, end_time
 
-        return int(app_id), pid, end_time
-    else:
-        return None
+    return None
 
 # Function to create database table if it doesn't exist already
 def create_db(conn):
