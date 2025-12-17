@@ -2,17 +2,18 @@ from config import STEAM_PATH, DB_NAME
 from session import Session
 import re
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import time
 
 blacklist_names = ["UbisoftGameLauncher.exe"]
 blacklist_pids = set()
 active_app = None
 active_pid = None
+active_start_time = None
 
 # Function to parse log lines and extract session information
 def parse_log(log_line):
-    global blacklist_names, blacklist_pids, active_app, active_pid
+    global blacklist_names, blacklist_pids, active_app, active_pid, active_start_time
 
     start_session_pattern = r'\[(.*?)\] AppID (\d+) adding PID (\d+) as a tracked process ""'
     end_session_pattern = r'\[(.*?)\] AppID (\d+) no longer tracking PID (\d+)'
@@ -29,11 +30,12 @@ def parse_log(log_line):
             blacklist_pids.add(pid)
             return None
 
-        # if same app is already running, skip this
-        if active_app == app_id:
+        # if same app is already running, skip this (unless too much difference in time which indicates crash)
+        if active_app == app_id and start_time - active_start_time < timedelta(minutes=5):
             return None
         active_app = app_id
         active_pid = pid
+        active_start_time = start_time
 
         return Session(int(app_id), pid, start_time)
     elif end_match:
@@ -47,6 +49,7 @@ def parse_log(log_line):
         if active_app == app_id and active_pid == pid:
             active_app = None
             active_pid = None
+            active_start_time = None
             return int(app_id), pid, end_time
 
     return None
