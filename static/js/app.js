@@ -231,7 +231,10 @@ var useSessions = function (response) {
     sessions.forEach(session => {
         var relativeTimes = formatTimeRangeRelativeToBaseDate(session.start_time, session.end_time, response.date);
         session.start_time = relativeTimes[0];
-        session.end_time = relativeTimes[1];
+        if (session.end_time != null)
+            session.end_time = relativeTimes[1];
+        else
+            session.end_time = "Crash";
 
         var gregorianDateTime = new Date(session.scan_time);
         var scanTime = new persianDate(gregorianDateTime, 'fa').format("YYYY-MM-DD HH:mm:ss");
